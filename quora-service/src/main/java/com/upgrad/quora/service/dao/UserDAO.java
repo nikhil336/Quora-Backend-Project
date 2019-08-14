@@ -56,4 +56,20 @@ public class UserDAO {
         }
 
     }
+
+    public UserEntity getUserByEmail(final String username) {
+        TypedQuery<UserEntity> query = entityManager.createQuery("SELECT u from UserEntity u where u.userName = :userName",UserEntity.class);
+        List<UserEntity> list = query.setParameter("userName",username).getResultList();
+        if(list.size() == 0) {
+            return null;
+        }
+        else {
+            return list.get(0);
+        }
+    }
+
+    public void updateUser(UserEntity updatedUser) {
+        entityManager.merge(updatedUser);
+    }
+
 }

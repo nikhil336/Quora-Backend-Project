@@ -33,6 +33,19 @@ public class UserAuthDAO {
 
     }
 
+    public Boolean checkSign(final String accessToken) {
+
+        TypedQuery<UserAuthEntity> query = entityManager.createQuery("SELECT u from UserAuthEntity u where u.accesstoken = :accesstoken",UserAuthEntity.class);
+        List<UserAuthEntity> list = query.setParameter("accesstoken",accessToken).getResultList();
+        if(list.get(list.size()-1).getLogoutat() == null) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    }
+
     @Transactional
     public UserAuthEntity update(final UserAuthEntity userAuthEntity) {
         entityManager.persist(userAuthEntity);

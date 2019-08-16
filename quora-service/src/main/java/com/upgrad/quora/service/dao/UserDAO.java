@@ -79,6 +79,24 @@ public class UserDAO {
         }
     }
 
+    public Boolean checkRole(final String uuid) {
+
+        TypedQuery<UserEntity> query = entityManager.createQuery("SELECT u from UserEntity u where u.uuid = :uuid",UserEntity.class);
+        List<UserEntity> list = query.setParameter("uuid",uuid).getResultList();
+        if(list.size() != 0 && list.get(0).getRole().equals("admin")) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    @Transactional
+    public Boolean deleteUser(final UserEntity userEntity) {
+        entityManager.remove(userEntity);
+        return true;
+    }
+
     public void updateUser(UserEntity updatedUser) {
         entityManager.merge(updatedUser);
     }

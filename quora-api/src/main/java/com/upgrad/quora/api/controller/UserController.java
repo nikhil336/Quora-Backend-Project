@@ -62,7 +62,6 @@ public class UserController {
         SignupUserResponse response = new SignupUserResponse();
         response.setId(code);
         response.setStatus(message);
-        System.out.println(userEntity);
         return new ResponseEntity<SignupUserResponse>(response,HttpStatus.OK);
 
     }

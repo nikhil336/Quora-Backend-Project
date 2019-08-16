@@ -1,17 +1,18 @@
 package com.upgrad.quora.api.controller;
 
-import com.upgrad.quora.api.model.ErrorResponse;
 import com.upgrad.quora.api.model.UserDetailsResponse;
 import com.upgrad.quora.service.business.UserService;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class CommonController {
@@ -20,13 +21,12 @@ public class CommonController {
     UserService userService;
 
     @RequestMapping(method = RequestMethod.GET,path = "user/{userId}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<UserDetailsResponse> getUser(@PathVariable(name = "userId")final String uuid, @RequestHeader("authorization")final String authorization) throws UserNotFoundException, AuthorizationFailedException {
+    public ResponseEntity<Map> getUser(@PathVariable(name = "userId")final String uuid, @RequestHeader("authorization")final String authorization) {
 
-        String message;
-        String code;
+        String message = null;
+        String code = null;
         UserDetailsResponse userDetailsResponse = new UserDetailsResponse();
-        ErrorResponse errorResponse = new ErrorResponse();
-        HttpHeaders httpHeaders = new HttpHeaders();
+        Boolean flag = false;
 
         try {
             UserEntity userEntity = userService.getUser(uuid, authorization);
@@ -42,14 +42,28 @@ public class CommonController {
             code = userEntity.getUuid();
         }
         catch (UserNotFoundException e) {
-            message = e.getMessage();
+            flag = true;
+            message = e.getErrorMessage();
             code = e.getCode();
         }
         catch (AuthorizationFailedException e) {
-            message = e.getMessage();
+            flag = true;
+            message = e.getErrorMessage();
             code = e.getCode();
         }
 
-        return new ResponseEntity<UserDetailsResponse>(userDetailsResponse, HttpStatus.OK);
+        if(!flag) {
+
+            Map<String,UserDetailsResponse> map = new HashMap<>();
+            map.put("Response",userDetailsResponse);
+            return new ResponseEntity<Map>(map, HttpStatus.OK);
+        }
+        else {
+            Map<String,String> map = new HashMap<>();
+            map.put("id",code);
+            map.put("status",message);
+            return new ResponseEntity<Map>(map,HttpStatus.OK);
+        }
     }
+
 }

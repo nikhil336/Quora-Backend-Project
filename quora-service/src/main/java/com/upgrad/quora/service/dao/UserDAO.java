@@ -97,6 +97,18 @@ public class UserDAO {
         return true;
     }
 
+    public UserEntity getUserByUuid(final String uuid) {
+
+        TypedQuery<UserEntity> query = entityManager.createQuery("SELECT u from UserEntity u where u.uuid = :uuid",UserEntity.class);
+        List<UserEntity> list = query.setParameter("uuid",uuid).getResultList();
+        if(list.size() == 0) {
+            return null;
+        }
+        else {
+            return list.get(0);
+        }
+    }
+
     public void updateUser(UserEntity updatedUser) {
         entityManager.merge(updatedUser);
     }

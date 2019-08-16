@@ -65,4 +65,9 @@ public class UserAuthService {
             return userAuthEntity;
         }
     }
+
+    public String getUuidByToken(final String accessToken) {
+        UserAuthEntity userAuthEntity = userAuthDAO.checkToken(accessToken);
+        return userAuthEntity.getUuid();
+    }
 }

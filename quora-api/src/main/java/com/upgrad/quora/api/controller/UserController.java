@@ -34,7 +34,7 @@ public class UserController {
     UserAuthService userAuthService;
 
     @RequestMapping(path = "/user/signup",method = RequestMethod.POST, consumes = APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<SignupUserResponse> signup(final SignupUserRequest signupUserRequest) throws SignUpRestrictedException {
+    public ResponseEntity<SignupUserResponse> signup(final SignupUserRequest signupUserRequest) {
 
         UserEntity userEntity = new UserEntity();
         userEntity.setFirstName(signupUserRequest.getFirstName());
@@ -67,7 +67,7 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.POST,path = "/user/signin",produces = APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<SigninResponse> signin(@RequestHeader("authentication")final String authentication) throws AuthenticationFailedException {
+    public ResponseEntity<SigninResponse> signin(@RequestHeader("authentication")final String authentication) {
 
         byte[] decoded = Base64.getDecoder().decode(authentication);
         String decodedText = new String(decoded);
@@ -95,7 +95,7 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.POST,path = "/user/signout",produces = APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<SignoutResponse> signout(@RequestHeader("authentication")final String authentication) throws SignOutRestrictedException {
+    public ResponseEntity<SignoutResponse> signout(@RequestHeader("authentication")final String authentication) {
 
         String message;
         String code;

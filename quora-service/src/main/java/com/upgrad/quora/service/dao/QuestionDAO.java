@@ -63,7 +63,7 @@ public class QuestionDAO {
         List<String> listQuestions = new ArrayList<>();
         TypedQuery<QuestionEntity> query = entityManager.createQuery("SELECT u from QuestionEntity u",QuestionEntity.class);
         List<QuestionEntity> list = query.getResultList();
-        
+
         for (int i=0;i<list.size();i++) {
             if(list.get(i).getUserId() == userEntity) {
                 listQuestions.add(list.get(i).getContent());
@@ -71,6 +71,10 @@ public class QuestionDAO {
         }
 
         return listQuestions;
+    }
+
+    public void updateUser(QuestionEntity questionEntity) {
+        entityManager.merge(questionEntity);
     }
 
 }
